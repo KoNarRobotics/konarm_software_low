@@ -34,6 +34,11 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
   }
 }
 
+/*
+UTWÓRZ CALLBACKI
+Określone w main_prog.cpp
+*/
+
 void can_callback_set_pos(stmepic::CanBase &can, stmepic::CanDataFrame &recived_msg, void *args) {
   (void)can;
   (void)args;

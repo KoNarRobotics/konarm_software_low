@@ -97,16 +97,16 @@ void periferal_config() {
   i2c3 = mayby_i2c3.valueOrDie();
 
   CAN_FilterTypeDef can_filter;
-  can_filter.FilterBank           = 1;
-  can_filter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-  can_filter.FilterActivation     = CAN_FILTER_ENABLE;
-  can_filter.FilterMode           = CAN_FILTERMODE_IDMASK;
-  can_filter.FilterScale          = CAN_FILTERSCALE_16BIT;
-  can_filter.FilterIdHigh         = config.can_filter_id_high;
-  can_filter.FilterIdLow          = config.can_filter_id_low;
-  can_filter.FilterMaskIdHigh     = config.can_filter_mask_high;
-  can_filter.FilterMaskIdLow      = config.can_filter_mask_low;
-  can_filter.SlaveStartFilterBank = 0;
+  can_filter.FilterBank               = 1;
+  cat can_filter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+  can_filter.FilterActivation         = CAN_FILTER_ENABLE;
+  can_filter.FilterMode               = CAN_FILTERMODE_IDMASK;
+  can_filter.FilterScale              = CAN_FILTERSCALE_16BIT;
+  can_filter.FilterIdHigh             = config.can_filter_id_high;
+  can_filter.FilterIdLow              = config.can_filter_id_low;
+  can_filter.FilterMaskIdHigh         = config.can_filter_mask_high;
+  can_filter.FilterMaskIdLow          = config.can_filter_mask_low;
+  can_filter.SlaveStartFilterBank     = 0;
 
   STMEPIC_ASSING_TO_OR_HRESET(can1, stmepic::CAN::Make(hcan1, can_filter, &pin_tx_led, &pin_rx_led));
 
@@ -121,11 +121,14 @@ void periferal_config() {
   fram->device_start();
 }
 
+//
+// Napisz algorytm ktory na podstawie ID pisze pozostale ID (config.hpp Stuct IdConfig)
 uint8_t get_board_id() {
-  uint8_t id = 0;
-  id |= pin_cid_0.read();
-  id |= pin_cid_1.read() << 1;
-  id |= pin_cid_2.read() << 2;
+  uint8_t id = 4;
+  // TESTING
+  // id |= pin_cid_0.read();
+  // id |= pin_cid_1.read() << 1;
+  // id |= pin_cid_2.read() << 2;
   return id;
 }
 
@@ -283,6 +286,11 @@ void post_id_config() {
   init_and_set_movement_controler_mode(config.movement_control_mode);
 }
 
+/* MODIFY
+ - callback do resetowania
+ - callback do pobrania danych ze struktury konfiguracyjnych (config.hpp Struct IDConfig bez CAN bo ID jest hardcoded) (pobierania danych z maszyny do uzytkownika!!)
+ - callback do zapisania (configu od użytkownia wysyłany po CAN, np. user wysyła numer 5 i my to odpowiednio parsujemy, dogadaj się z Marią)
+*/
 
 void config_tasks() {
 

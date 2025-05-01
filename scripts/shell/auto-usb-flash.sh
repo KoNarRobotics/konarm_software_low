@@ -1,3 +1,4 @@
+#!/bin/bash
 vendor_id="0483"
 product_id="5740"
 vendor_enc="SDRACproject"
