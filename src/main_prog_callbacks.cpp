@@ -1,5 +1,5 @@
 #include "Timing.hpp"
-#include "can.h"
+#include "can_messages.h"
 // #include "can_control.hpp"
 #include "config.hpp"
 #include "main.h"
@@ -38,6 +38,28 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
 UTWÓRZ CALLBACKI
 Określone w main_prog.cpp
 */
+
+void can_callback_get_config(stmepic::CanBase &can, stmepic::CanDataFrame &recived_msg, void *args) {
+  (void)can;
+  (void)recived_msg;
+  (void)args;
+  // wyslany zostaje config_temp
+}
+
+void can_callback_send_config(stmepic::CanBase &can, stmepic::CanDataFrame &recived_msg, void *args) {
+  (void)can;
+  (void)recived_msg;
+  (void)args;
+  // ramka odebrana zostaje zapisana w config_temp
+}
+
+void can_callback_set_and_reset(stmepic::CanBase &can, stmepic::CanDataFrame &recived_msg, void *args) {
+  (void)can;
+  (void)recived_msg;
+  (void)args;
+  (void)fram->writeStruct(FRAM_CONFIG_ADDRESS, config_temp);
+  HAL_NVIC_SystemReset;
+}
 
 void can_callback_set_pos(stmepic::CanBase &can, stmepic::CanDataFrame &recived_msg, void *args) {
   (void)can;

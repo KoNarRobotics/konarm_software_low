@@ -6,7 +6,7 @@
 // #include <cstdint>
 // #include <cstdint>
 #include "Timing.hpp"
-#include "can.h"
+#include "can_messages.h"
 #include "can.hpp"
 // #include "can_control.hpp"
 #include "dfu_usb_programer.hpp"
@@ -123,6 +123,9 @@ struct IdConfig {
   uint32_t can_konarm_clear_errors_frame_id;
   uint32_t can_konarm_get_errors_frame_id;
   uint32_t can_konarm_set_control_mode_frame_id;
+  uint32_t can_konarm_get_config_frame_id;
+  uint32_t can_konarm_send_config_frame_id;
+  uint32_t can_konarm_set_and_reset_frame_id;
 
 
   // Steper motor config
@@ -172,7 +175,7 @@ struct IdConfig {
 /// you can retrieve the amount of errors by calling get_amount_of_errors()
 class ErrorData {
 public:
-  ErrorData(){};
+  ErrorData() {};
   // temperature errors
   bool temp_engine_overheating       = false;
   bool temp_driver_overheating       = false;
@@ -203,6 +206,7 @@ public:
 
 
 extern IdConfig config;
+extern IdConfig config_temp;
 extern const IdConfig config_id_default;
 extern const IdConfig config_id_1;
 extern const IdConfig config_id_2;

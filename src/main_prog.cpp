@@ -1,6 +1,6 @@
 #include "main_prog.hpp"
 #include "stmepic.hpp"
-#include "can.hpp"
+#include "can_messages.h"
 #include "config.hpp"
 #include "encoder_magnetic.hpp"
 #include "fram_i2c.hpp"
@@ -97,16 +97,16 @@ void periferal_config() {
   i2c3 = mayby_i2c3.valueOrDie();
 
   CAN_FilterTypeDef can_filter;
-  can_filter.FilterBank               = 1;
-  cat can_filter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-  can_filter.FilterActivation         = CAN_FILTER_ENABLE;
-  can_filter.FilterMode               = CAN_FILTERMODE_IDMASK;
-  can_filter.FilterScale              = CAN_FILTERSCALE_16BIT;
-  can_filter.FilterIdHigh             = config.can_filter_id_high;
-  can_filter.FilterIdLow              = config.can_filter_id_low;
-  can_filter.FilterMaskIdHigh         = config.can_filter_mask_high;
-  can_filter.FilterMaskIdLow          = config.can_filter_mask_low;
-  can_filter.SlaveStartFilterBank     = 0;
+  can_filter.FilterBank           = 1;
+  can_filter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+  can_filter.FilterActivation     = CAN_FILTER_ENABLE;
+  can_filter.FilterMode           = CAN_FILTERMODE_IDMASK;
+  can_filter.FilterScale          = CAN_FILTERSCALE_16BIT;
+  can_filter.FilterIdHigh         = config.can_filter_id_high;
+  can_filter.FilterIdLow          = config.can_filter_id_low;
+  can_filter.FilterMaskIdHigh     = config.can_filter_mask_high;
+  can_filter.FilterMaskIdLow      = config.can_filter_mask_low;
+  can_filter.SlaveStartFilterBank = 0;
 
   STMEPIC_ASSING_TO_OR_HRESET(can1, stmepic::CAN::Make(hcan1, can_filter, &pin_tx_led, &pin_rx_led));
 
@@ -121,10 +121,9 @@ void periferal_config() {
   fram->device_start();
 }
 
-//
-// Napisz algorytm ktory na podstawie ID pisze pozostale ID (config.hpp Stuct IdConfig)
+
 uint8_t get_board_id() {
-  uint8_t id = 4;
+  uint8_t id = 0x4;
   // TESTING
   // id |= pin_cid_0.read();
   // id |= pin_cid_1.read() << 1;
@@ -132,8 +131,27 @@ uint8_t get_board_id() {
   return id;
 }
 
+void get_frames_from_id(IdConfig &config, uint32_t id) {
+  config.can_filter_mask_high = 0xff0;
+  config.can_filter_mask_low  = 0x000;
+  config.can_filter_id_high   = CAN_KONARM_1_STATUS_FRAME_ID & 0xf00 | (id << 4);
+  config.can_filter_id_low    = 0x000;
+
+  config.can_konarm_status_frame_id           = (CAN_KONARM_1_STATUS_FRAME_ID & 0xf0f | (id << 4));
+  config.can_konarm_set_pos_frame_id          = (CAN_KONARM_1_SET_POS_FRAME_ID & 0xf0f | (id << 4));
+  config.can_konarm_get_pos_frame_id          = (CAN_KONARM_1_GET_POS_FRAME_ID & 0xf0f | (id << 4));
+  config.can_konarm_clear_errors_frame_id     = (CAN_KONARM_1_CLEAR_ERRORS_FRAME_ID & 0xf0f | (id << 4));
+  config.can_konarm_get_errors_frame_id       = (CAN_KONARM_1_GET_ERRORS_FRAME_ID & 0xf0f | (id << 4));
+  config.can_konarm_set_control_mode_frame_id = (CAN_KONARM_1_SET_CONTROL_MODE_FRAME_ID & 0xf0f | (id << 4));
+  config.can_konarm_get_config_frame_id       = (CAN_KONARM_1_GET_CONFIG_FRAME_ID & 0xf0f | (id << 4));
+  config.can_konarm_send_config_frame_id      = (CAN_KONARM_1_SEND_CONFIG_FRAME_ID & 0xf0f | (id << 4));
+  config.can_konarm_set_and_reset_frame_id    = (CAN_KONARM_1_SET_AND_RESET_FRAME_ID & 0xf0f | (id << 4));
+}
+
 void id_config() {
   log_debug(stmepic::Logger::parse_to_json_format("state", "id_config"));
+  // POBIERANIE ID
+  uint8_t id = get_board_id();
 
   // probably here load data from FRAM
   auto mayby_config = fram->readStruct<IdConfig>(FRAM_CONFIG_ADDRESS);
@@ -144,15 +162,19 @@ void id_config() {
     log_debug("Config not loaded from FRAM");
   }
 
-  switch(get_board_id()) {
-  case BOARD_ID_1: config = config_id_1; break;
-  case BOARD_ID_2: config = config_id_2; break;
-  case BOARD_ID_3: config = config_id_3; break;
-  case BOARD_ID_4: config = config_id_4; break;
-  case BOARD_ID_5: config = config_id_5; break;
-  case BOARD_ID_6: config = config_id_6; break;
-  default: config = config_id_default; break;
-  }
+  // switch(get_board_id()) {
+  // case BOARD_ID_1: config = config_id_1; break;
+  // case BOARD_ID_2: config = config_id_2; break;
+  // case BOARD_ID_3: config = config_id_3; break;
+  // case BOARD_ID_4: config = config_id_4; break;
+  // case BOARD_ID_5: config = config_id_5; break;
+  // case BOARD_ID_6: config = config_id_6; break;
+  // default: config = config_id_default; break;
+  // }
+
+  // ZAMIAST TAMTEGO
+  get_frames_from_id(config, id);
+  config_temp = config;
 
   (void)fram->writeStruct(FRAM_CONFIG_ADDRESS, config);
 }
@@ -287,7 +309,6 @@ void post_id_config() {
 }
 
 /* MODIFY
- - callback do resetowania
  - callback do pobrania danych ze struktury konfiguracyjnych (config.hpp Struct IDConfig bez CAN bo ID jest hardcoded) (pobierania danych z maszyny do uzytkownika!!)
  - callback do zapisania (configu od użytkownia wysyłany po CAN, np. user wysyła numer 5 i my to odpowiednio parsujemy, dogadaj się z Marią)
 */
@@ -300,6 +321,9 @@ void config_tasks() {
   can1->add_callback(config.can_konarm_status_frame_id, can_callback_status);
   can1->add_callback(config.can_konarm_set_pos_frame_id, can_callback_set_pos);
   can1->add_callback(config.can_konarm_get_pos_frame_id, can_callback_get_pos);
+  can1->add_callback(config.can_konarm_get_config_frame_id, can_callback_get_config);
+  can1->add_callback(config.can_konarm_send_config_frame_id, can_callback_send_config);
+  can1->add_callback(config.can_konarm_set_and_reset_frame_id, can_callback_set_and_reset);
   can1->add_callback(0, can_callback_default);
 
   task_blink_timer.task_init(task_blink, (void *)&pin_user_led_1, FREQUENCY_TO_PERIOD_MS(TIMING_LED_BLINK_FQ));

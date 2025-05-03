@@ -4,7 +4,7 @@
 #include "cmsis_os.h"
 
 
-#include "can.h"
+#include "can_messages.h"
 #include "encoder.hpp"
 
 #include "MCP9700AT.hpp"
@@ -126,6 +126,9 @@ void can_callback_status(stmepic::CanBase &can, stmepic::CanDataFrame &recived_m
 void can_callback_get_pos(stmepic::CanBase &can, stmepic::CanDataFrame &recived_msg, void *args);
 void can_callback_set_pos(stmepic::CanBase &can, stmepic::CanDataFrame &recived_msg, void *args);
 void can_callback_set_control_mode(stmepic::CanBase &can, stmepic::CanDataFrame &recived_msg, void *args);
+void can_callback_get_config(stmepic::CanBase &can, stmepic::CanDataFrame &recived_msg, void *args);
+void can_callback_send_config(stmepic::CanBase &can, stmepic::CanDataFrame &recived_msg, void *args);
+void can_callback_set_and_reset(stmepic::CanBase &can, stmepic::CanDataFrame &recived_msg, void *args);
 
 
 #endif // MAIN_PROG_H
