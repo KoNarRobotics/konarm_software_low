@@ -34,22 +34,34 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
   }
 }
 
-/*
-UTWÓRZ CALLBACKI
-Określone w main_prog.cpp
-*/
-
 void can_callback_get_config(stmepic::CanBase &can, stmepic::CanDataFrame &recived_msg, void *args) {
-  (void)can;
-  (void)recived_msg;
   (void)args;
+
+  Config_code config_to_get;
+  config_to_get.current_config = config_temp;
+
+  config_to_get.decode(recived_msg.data);
+
+  stmepic::CanDataFrame send_msg;
+  send_msg.frame_id  = config_temp.can_konarm_get_config_frame_id;
+  send_msg.data_size = 5;
+
+  config_to_get.encode(send_msg.data);
+
+  can.write(send_msg);
   // wyslany zostaje config_temp
 }
 
 void can_callback_send_config(stmepic::CanBase &can, stmepic::CanDataFrame &recived_msg, void *args) {
   (void)can;
-  (void)recived_msg;
   (void)args;
+
+  Config_code config_to_send;
+  config_to_send.current_config = config_temp;
+
+  config_to_send.decode(recived_msg.data);
+
+  config_temp = config_to_send.current_config;
   // ramka odebrana zostaje zapisana w config_temp
 }
 
