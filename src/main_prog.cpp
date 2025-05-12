@@ -10,6 +10,7 @@
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_cortex.h"
 #include "stm32f4xx_hal_i2c.h"
+#include "can_config.hpp"
 #include <cstddef>
 #include <cstdint>
 
@@ -146,6 +147,16 @@ void get_frames_from_id(IdConfig &config, uint32_t id) {
   config.can_konarm_get_config_frame_id       = (CAN_KONARM_1_GET_CONFIG_FRAME_ID & 0xf0f | (id << 4));
   config.can_konarm_send_config_frame_id      = (CAN_KONARM_1_SEND_CONFIG_FRAME_ID & 0xf0f | (id << 4));
   config.can_konarm_set_and_reset_frame_id    = (CAN_KONARM_1_SET_AND_RESET_FRAME_ID & 0xf0f | (id << 4));
+
+  // testing
+  Config_code test_config_code;
+  test_config_code.current_config = config;
+
+  stmepic::CanDataFrame send_msg;
+  send_msg.frame_id  = test_config_code.current_config.can_konarm_get_config_frame_id;
+  send_msg.data_size = 5;
+
+  test_config_code.encode(send_msg.data);
 }
 
 void id_config() {

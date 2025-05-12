@@ -5,6 +5,7 @@
 #include "main.h"
 #include "main_prog.hpp"
 #include "stm32f4xx_hal.h"
+#include "can_config.hpp"
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   if(htim->Instance == TIM10) {
@@ -49,7 +50,6 @@ void can_callback_get_config(stmepic::CanBase &can, stmepic::CanDataFrame &reciv
   config_to_get.encode(send_msg.data);
 
   can.write(send_msg);
-  // wyslany zostaje config_temp
 }
 
 void can_callback_send_config(stmepic::CanBase &can, stmepic::CanDataFrame &recived_msg, void *args) {
@@ -62,7 +62,6 @@ void can_callback_send_config(stmepic::CanBase &can, stmepic::CanDataFrame &reci
   config_to_send.decode(recived_msg.data);
 
   config_temp = config_to_send.current_config;
-  // ramka odebrana zostaje zapisana w config_temp
 }
 
 void can_callback_set_and_reset(stmepic::CanBase &can, stmepic::CanDataFrame &recived_msg, void *args) {
