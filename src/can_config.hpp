@@ -7,19 +7,17 @@
 class Config_code {
 public:
   Config_code() {};
-  // uint8_t ID;
-  // IdConfig current_config;
 
   void encode(uint8_t ID, uint8_t *tab, IdConfig &current_config) {
     uint32_t val;
     if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_STEPPER_MOTOR_STEPS_PER_REV_CHOICE)
-      val = current_config.stepper_motor_steps_per_rev;
+      val = float_to_uint(current_config.stepper_motor_steps_per_rev);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_STEPPER_MOTOR_GEAR_RATIO_CHOICE)
-      val = current_config.stepper_motor_gear_ratio;
+      val = float_to_uint(current_config.stepper_motor_gear_ratio);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_STEPPER_MOTOR_MAX_VELOCITY_CHOICE)
-      val = current_config.stepper_motor_max_velocity;
+      val = float_to_uint(current_config.stepper_motor_max_velocity);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_STEPPER_MOTOR_MIN_VELOCITY_CHOICE)
-      val = current_config.stepper_motor_min_velocity;
+      val = float_to_uint(current_config.stepper_motor_min_velocity);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_STEPPER_MOTOR_REVERSE_CHOICE)
       val = current_config.stepper_motor_reverse;
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_STEPPER_MOTOR_ENABLE_REVERSED_CHOICE)
@@ -28,42 +26,42 @@ public:
       val = current_config.stepper_motor_timer_prescaler;
 
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_ENCODER_ARM_OFFSET_CHOICE)
-      val = current_config.encoder_arm_offset;
+      val = float_to_uint(current_config.encoder_arm_offset);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_ENCODER_ARM_REVERSE_CHOICE)
       val = current_config.encoder_arm_reverse;
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_ENCODER_ARM_DEAD_ZONE_CORRECTION_ANGLE_CHOICE)
-      val = current_config.encoder_arm_dead_zone_correction_angle;
+      val = float_to_uint(current_config.encoder_arm_dead_zone_correction_angle);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_ENCODER_ARM_VELOCITY_SAMPLE_AMOUNT_CHOICE)
       val = current_config.encoder_arm_velocity_sample_amount;
 
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_ENCODER_MOTOR_OFFSET_CHOICE)
-      val = current_config.encoder_motor_offset;
+      val = float_to_uint(current_config.encoder_motor_offset);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_ENCODER_MOTOR_REVERSE_CHOICE)
       val = current_config.encoder_motor_reverse;
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_ENCODER_MOTOR_DEAD_ZONE_CORRECTION_ANGLE_CHOICE)
-      val = current_config.encoder_motor_dead_zone_correction_angle;
+      val = float_to_uint(current_config.encoder_motor_dead_zone_correction_angle);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_ENCODER_MOTOR_VELOCITY_SAMPLE_AMOUNT_CHOICE)
       val = current_config.encoder_motor_velocity_sample_amount;
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_ENCODER_MOTOR_ENABLE_CHOICE)
       val = current_config.encoder_motor_enable;
 
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_PID_P_CHOICE)
-      val = current_config.pid_p;
+      val = float_to_uint(current_config.pid_p);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_PID_I_CHOICE)
-      val = current_config.pid_i;
+      val = float_to_uint(current_config.pid_i);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_PID_D_CHOICE)
-      val = current_config.pid_d;
+      val = float_to_uint(current_config.pid_d);
 
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_MOVEMENT_MAX_VELOCITY_CHOICE)
-      val = current_config.movement_max_velocity;
+      val = float_to_uint(current_config.movement_max_velocity);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_MOVEMENT_LIMIT_LOWER_CHOICE)
-      val = current_config.movement_limit_lower;
+      val = float_to_uint(current_config.movement_limit_lower);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_MOVEMENT_LIMIT_UPPER_CHOICE)
-      val = current_config.movement_limit_upper;
+      val = float_to_uint(current_config.movement_limit_upper);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_MOVEMENT_CONTROL_MODE_CHOICE)
       val = current_config.movement_control_mode;
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_MOVEMENT_MAX_ACCELERATION_CHOICE)
-      val = current_config.movement_max_acceleration;
+      val = float_to_uint(current_config.movement_max_acceleration);
     tab[0] = ID;
     tab[1] = val >> 24;
     tab[2] = (val & 0x00ff0000) >> 16;
@@ -77,13 +75,13 @@ public:
     uint32_t val = tab[1] << 24 | tab[2] << 16 | tab[3] << 8 | tab[4];
 
     if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_STEPPER_MOTOR_STEPS_PER_REV_CHOICE)
-      current_config.stepper_motor_steps_per_rev = val;
+      current_config.stepper_motor_steps_per_rev = uint_to_float(val);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_STEPPER_MOTOR_GEAR_RATIO_CHOICE)
-      current_config.stepper_motor_gear_ratio = val;
+      current_config.stepper_motor_gear_ratio = uint_to_float(val);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_STEPPER_MOTOR_MAX_VELOCITY_CHOICE)
-      current_config.stepper_motor_max_velocity = val;
+      current_config.stepper_motor_max_velocity = uint_to_float(val);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_STEPPER_MOTOR_MIN_VELOCITY_CHOICE)
-      current_config.stepper_motor_min_velocity = val;
+      current_config.stepper_motor_min_velocity = uint_to_float(val);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_STEPPER_MOTOR_REVERSE_CHOICE)
       current_config.stepper_motor_reverse = val;
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_STEPPER_MOTOR_ENABLE_REVERSED_CHOICE)
@@ -92,42 +90,50 @@ public:
       current_config.stepper_motor_timer_prescaler = val;
 
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_ENCODER_ARM_OFFSET_CHOICE)
-      current_config.encoder_arm_offset = val;
+      current_config.encoder_arm_offset = uint_to_float(val);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_ENCODER_ARM_REVERSE_CHOICE)
       current_config.encoder_arm_reverse = val;
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_ENCODER_ARM_DEAD_ZONE_CORRECTION_ANGLE_CHOICE)
-      current_config.encoder_arm_dead_zone_correction_angle = val;
+      current_config.encoder_arm_dead_zone_correction_angle = uint_to_float(val);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_ENCODER_ARM_VELOCITY_SAMPLE_AMOUNT_CHOICE)
       current_config.encoder_arm_velocity_sample_amount = val;
 
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_ENCODER_MOTOR_OFFSET_CHOICE)
-      current_config.encoder_motor_offset = val;
+      current_config.encoder_motor_offset = uint_to_float(val);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_ENCODER_MOTOR_REVERSE_CHOICE)
       current_config.encoder_motor_reverse = val;
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_ENCODER_MOTOR_DEAD_ZONE_CORRECTION_ANGLE_CHOICE)
-      current_config.encoder_motor_dead_zone_correction_angle = val;
+      current_config.encoder_motor_dead_zone_correction_angle = uint_to_float(val);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_ENCODER_MOTOR_VELOCITY_SAMPLE_AMOUNT_CHOICE)
       current_config.encoder_motor_velocity_sample_amount = val;
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_ENCODER_MOTOR_ENABLE_CHOICE)
       current_config.encoder_motor_enable = val;
 
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_PID_P_CHOICE)
-      current_config.pid_p = val;
+      current_config.pid_p = uint_to_float(val);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_PID_I_CHOICE)
-      current_config.pid_i = val;
+      current_config.pid_i = uint_to_float(val);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_PID_D_CHOICE)
-      current_config.pid_d = val;
+      current_config.pid_d = uint_to_float(val);
 
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_MOVEMENT_MAX_VELOCITY_CHOICE)
-      current_config.movement_max_velocity = val;
+      current_config.movement_max_velocity = uint_to_float(val);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_MOVEMENT_LIMIT_LOWER_CHOICE)
-      current_config.movement_limit_lower = val;
+      current_config.movement_limit_lower = uint_to_float(val);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_MOVEMENT_LIMIT_UPPER_CHOICE)
-      current_config.movement_limit_upper = val;
+      current_config.movement_limit_upper = uint_to_float(val);
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_MOVEMENT_CONTROL_MODE_CHOICE)
       current_config.movement_control_mode = val;
     else if(ID == CAN_KONARM_1_GET_CONFIG_ASK_FOR_CONFIG_MOVEMENT_MAX_ACCELERATION_CHOICE)
-      current_config.movement_max_acceleration = val;
+      current_config.movement_max_acceleration = uint_to_float(val);
     // }
+  }
+
+  uint32_t float_to_uint(float &my_float) {
+    return *reinterpret_cast<uint32_t *>(&my_float);
+  }
+
+  float uint_to_float(uint32_t &my_uint) {
+    return *reinterpret_cast<float *>(&my_uint);
   }
 };

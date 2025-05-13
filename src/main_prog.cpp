@@ -13,6 +13,7 @@
 #include "can_config.hpp"
 #include <cstddef>
 #include <cstdint>
+#include <iostream>
 
 
 //**************************************************************************************************
@@ -150,13 +151,15 @@ void get_frames_from_id(IdConfig &config, uint32_t id) {
 
   // testing
   Config_code test_config_code;
-  test_config_code.current_config = config;
 
   stmepic::CanDataFrame send_msg;
-  send_msg.frame_id  = test_config_code.current_config.can_konarm_get_config_frame_id;
+  send_msg.frame_id  = config.can_konarm_get_config_frame_id;
   send_msg.data_size = 5;
 
-  test_config_code.encode(send_msg.data);
+  test_config_code.encode(1u, send_msg.data, config);
+  test_config_code.decode(send_msg.data, config);
+  int test = 1 + 1;
+  test     = test + 1;
 }
 
 void id_config() {
