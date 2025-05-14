@@ -158,8 +158,6 @@ void get_frames_from_id(IdConfig &config, uint32_t id) {
 
   test_config_code.encode(1u, send_msg.data, config);
   test_config_code.decode(send_msg.data, config);
-  int test = 1 + 1;
-  test     = test + 1;
 }
 
 void id_config() {
