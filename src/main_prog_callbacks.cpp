@@ -39,14 +39,12 @@ void can_callback_get_config(stmepic::CanBase &can, stmepic::CanDataFrame &reciv
   (void)args;
 
   Config_code config_to_get;
-  // config_to_get.current_config = config_temp;
-
-  config_to_get.decode(recived_msg.data, config_temp);
-
   stmepic::CanDataFrame send_msg;
+
   send_msg.frame_id  = config_temp.can_konarm_get_config_frame_id;
   send_msg.data_size = 5;
 
+  //                   ???????????????????, to juz chyba git
   config_to_get.encode(recived_msg.data[0], send_msg.data, config_temp);
 
   can.write(send_msg);
@@ -68,6 +66,7 @@ void can_callback_set_and_reset(stmepic::CanBase &can, stmepic::CanDataFrame &re
   (void)can;
   (void)recived_msg;
   (void)args;
+
   (void)fram->writeStruct(FRAM_CONFIG_ADDRESS, config_temp);
   HAL_NVIC_SystemReset;
 }

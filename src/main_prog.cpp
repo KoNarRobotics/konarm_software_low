@@ -148,16 +148,6 @@ void get_frames_from_id(IdConfig &config, uint32_t id) {
   config.can_konarm_get_config_frame_id       = (CAN_KONARM_1_GET_CONFIG_FRAME_ID & 0xf0f | (id << 4));
   config.can_konarm_send_config_frame_id      = (CAN_KONARM_1_SEND_CONFIG_FRAME_ID & 0xf0f | (id << 4));
   config.can_konarm_set_and_reset_frame_id    = (CAN_KONARM_1_SET_AND_RESET_FRAME_ID & 0xf0f | (id << 4));
-
-  // testing
-  Config_code test_config_code;
-
-  stmepic::CanDataFrame send_msg;
-  send_msg.frame_id  = config.can_konarm_get_config_frame_id;
-  send_msg.data_size = 5;
-
-  test_config_code.encode(1u, send_msg.data, config);
-  test_config_code.decode(send_msg.data, config);
 }
 
 void id_config() {
@@ -174,17 +164,6 @@ void id_config() {
     log_debug("Config not loaded from FRAM");
   }
 
-  // switch(get_board_id()) {
-  // case BOARD_ID_1: config = config_id_1; break;
-  // case BOARD_ID_2: config = config_id_2; break;
-  // case BOARD_ID_3: config = config_id_3; break;
-  // case BOARD_ID_4: config = config_id_4; break;
-  // case BOARD_ID_5: config = config_id_5; break;
-  // case BOARD_ID_6: config = config_id_6; break;
-  // default: config = config_id_default; break;
-  // }
-
-  // ZAMIAST TAMTEGO
   get_frames_from_id(config, id);
   config_temp = config;
 
@@ -319,11 +298,6 @@ void post_id_config() {
   movement_controler.set_enable(false);
   init_and_set_movement_controler_mode(config.movement_control_mode);
 }
-
-/* MODIFY
- - callback do pobrania danych ze struktury konfiguracyjnych (config.hpp Struct IDConfig bez CAN bo ID jest hardcoded) (pobierania danych z maszyny do uzytkownika!!)
- - callback do zapisania (configu od użytkownia wysyłany po CAN, np. user wysyła numer 5 i my to odpowiednio parsujemy, dogadaj się z Marią)
-*/
 
 void config_tasks() {
 
